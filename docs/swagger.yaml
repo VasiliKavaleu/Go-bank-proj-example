@@ -1,0 +1,14 @@
+basePath: /
+info:
+  contact:
+    email: example@email.com
+    name: API Support
+  description: Swagger API for Golang Project.
+  license:
+    name: MIT
+    url: https://github.com/VasiliKavaleu/Go-bank-proj-example
+  termsOfService: http://swagger.io/terms/
+  title: Bank Proj
+  version: "1.0"
+paths: {}
+swagger: "2.0"

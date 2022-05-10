@@ -1,15 +1,17 @@
 package api
 
 import (
+	"fmt"
 	db "simplebank/db/sqlc"
+	_ "simplebank/docs"
 	"simplebank/token"
 	"simplebank/util"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
-
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Server struct {
@@ -31,7 +33,6 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 		tokenMaker: tokenMaker,
 	}
 
-
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("currency", validCurrency)
 	}
@@ -42,6 +43,9 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 
 func (server *Server) setupRouter() {
 	router := gin.Default()
+
+	url := ginSwagger.URL("http://0.0.0.0:8000/swagger/doc.json") // The url pointing to API definition
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)

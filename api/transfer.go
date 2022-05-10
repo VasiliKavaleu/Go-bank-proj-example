@@ -2,23 +2,21 @@ package api
 
 import (
 	"database/sql"
-	"net/http"
-	"fmt"
 	"errors"
+	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 
 	db "simplebank/db/sqlc"
 	"simplebank/token"
-
 )
 
-
 type transferRequest struct {
-	FromAccountID    int64 `json:"from_account_id" binding:"required,min=1"`
-	ToAccountID      int64 `json:"to_account_id" binding:"required,min=1"`
-	Amount           int64 `json:"amount" binding:"required,gt=1"`
-	Currency         string `json:"currency" binding:"required,currency"`	
+	FromAccountID int64  `json:"from_account_id" binding:"required,min=1"`
+	ToAccountID   int64  `json:"to_account_id" binding:"required,min=1"`
+	Amount        int64  `json:"amount" binding:"required,gt=1"`
+	Currency      string `json:"currency" binding:"required,currency"`
 }
 
 func (server *Server) createTrancfer(ctx *gin.Context) {
@@ -32,8 +30,6 @@ func (server *Server) createTrancfer(ctx *gin.Context) {
 	if !valid {
 		return
 	}
-
-
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 	if fromAccount.Owner != authPayload.Username {
@@ -49,8 +45,8 @@ func (server *Server) createTrancfer(ctx *gin.Context) {
 
 	arg := db.TransferTxParams{
 		FromAccountID: req.FromAccountID,
-		ToAccountID: req.ToAccountID,
-		Amount: req.Amount,
+		ToAccountID:   req.ToAccountID,
+		Amount:        req.Amount,
 	}
 
 	result, err := server.store.TransferTx(ctx, arg)

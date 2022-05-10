@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	//"github.com/google/uuid"
+	"github.com/google/uuid"
 	"github.com/lib/pq"
 	db "simplebank/db/sqlc"
 	"simplebank/util"
@@ -88,7 +88,6 @@ type loginUserResponse struct {
 	User                  userResponse `json:"user"`
 }
 
-
 func (server *Server) loginUser(ctx *gin.Context) {
 	var req loginUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -133,13 +132,13 @@ func (server *Server) loginUser(ctx *gin.Context) {
 	}
 
 	session, err := server.store.CreateSession(ctx, db.CreateSessionParams{
-		ID: 			refreshPayload.ID,
-		Username: 		user.Username,
-		RefreshToken:   refreshToken,
-		UserAgent: 		ctx.Request.UserAgent(),
-		ClientIp: 		ctx.ClientIP(),
-		IsBlocked: 		false,
-		ExpiresAt: 		refreshPayload.ExpiredAt,
+		ID:           refreshPayload.ID,
+		Username:     user.Username,
+		RefreshToken: refreshToken,
+		UserAgent:    ctx.Request.UserAgent(),
+		ClientIp:     ctx.ClientIP(),
+		IsBlocked:    false,
+		ExpiresAt:    refreshPayload.ExpiredAt,
 	})
 
 	if err != nil {
@@ -148,13 +147,12 @@ func (server *Server) loginUser(ctx *gin.Context) {
 	}
 
 	rsp := loginUserResponse{
-		SessionID: 		       session.ID,
-		AccessToken: 	       accessToken,
+		SessionID:             session.ID,
+		AccessToken:           accessToken,
 		AccessTokenExpiresAt:  accessPayload.ExpiredAt,
-		User: 			       newUserResponse(user),
-		RefreshToken: 		   refreshToken,
+		User:                  newUserResponse(user),
+		RefreshToken:          refreshToken,
 		RefreshTokenExpiresAt: refreshPayload.ExpiredAt,
-
 	}
 
 	ctx.JSON(http.StatusOK, rsp)

@@ -52,4 +52,3 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 		ctx.Next()
 	}
 }
-
